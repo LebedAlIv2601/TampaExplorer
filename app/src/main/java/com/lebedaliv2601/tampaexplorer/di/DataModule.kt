@@ -9,18 +9,23 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DataModule {
 
+    @Singleton
     @Provides
-    fun provideNHLServices(): NHLServices{
-        val retrofit  = Retrofit.Builder()
+    fun provideClient(): Retrofit {
+        return Retrofit.Builder()
             .baseUrl(BASE_API)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+    }
 
+    @Provides
+    fun provideNHLServices(retrofit: Retrofit): NHLServices {
         return retrofit.create(NHLServices::class.java)
     }
 }

@@ -16,7 +16,7 @@ fun GamesProgressBar(){
 
     Box(modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center){
-        CircularProgressIndicator(color = Color.White, strokeWidth = 6.dp)
+        CircularProgressIndicator(color = Color.White, strokeWidth = 5.dp)
     }
 
 }
