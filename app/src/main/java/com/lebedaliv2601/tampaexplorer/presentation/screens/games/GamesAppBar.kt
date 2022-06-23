@@ -1,6 +1,8 @@
 package com.lebedaliv2601.tampaexplorer.presentation.screens.games
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -17,17 +19,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun GamesAppBar(){
+fun GamesAppBar(
+    seasonType: String,
+    seasonYear: String,
+    onTitleClick: () -> Unit
+) {
+
+    val seasonName = if (seasonType == "R") {
+        "Reg.Season"
+    } else {
+        "Play-Off"
+    }
+
     TopAppBar(
         backgroundColor = MaterialTheme.colors.primaryVariant,
         title = {
-            Text(
-                text = "Reg.Season, 2021-2022",
-                color = Color.White,
-                fontSize = 18.sp
-            )
-            Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
-                Icon(Icons.Filled.ArrowDropDown, contentDescription = null, modifier = Modifier.padding(top = 4.dp))
+            Row(modifier = Modifier.clickable { onTitleClick() }) {
+                Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "$seasonName, $seasonYear",
+                        color = Color.White,
+                        fontSize = 18.sp
+                    )
+                }
+                Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center) {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
             }
         }
     )
