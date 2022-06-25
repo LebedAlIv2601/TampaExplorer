@@ -26,13 +26,15 @@ fun GamesSeasonSelector(
     currentSeasonType: String,
     currentSeasonYear: String,
     onSeasonYearChanged: (String) -> Unit,
-    onSeasonTypeChanged: (String) -> Unit
+    onSeasonTypeChanged: (String) -> Unit,
+    onButtonApplyClick: () -> Unit
 ) {
 
     Card(
         modifier = Modifier
             .padding(8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(260.dp),
         backgroundColor = Color.White,
         elevation = 4.dp,
         shape = AbsoluteRoundedCornerShape(
@@ -53,6 +55,11 @@ fun GamesSeasonSelector(
             SeasonTypeSelector(
                 currentSeasonType = currentSeasonType,
                 onButtonClick = onSeasonTypeChanged
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            BlueButton(
+                text = "Apply",
+                onButtonClick = onButtonApplyClick
             )
         }
 
@@ -134,6 +141,31 @@ fun SeasonTypeSelector(
 }
 
 @Composable
+fun BlueButton(
+    text: String,
+    onButtonClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .width(100.dp)
+            .clickable { onButtonClick() },
+        backgroundColor = MaterialTheme.colors.primaryVariant,
+        elevation = 0.dp,
+        shape = AbsoluteRoundedCornerShape(
+            corner = CornerSize(20.dp)
+        ),
+    ) {
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            fontSize = 20.sp,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        )
+    }
+}
+
+@Composable
 fun CircleButtonWithIcon(
     seasonType: String,
     isSelected: Boolean,
@@ -198,7 +230,7 @@ private val seasons = listOf(
     "2021-2022", "2020-2021", "2019-2020", "2018-2019", "2017-2018",
     "2016-2017", "2015-2016", "2014-2015", "2013-2014", "2012-2013",
     "2011-2012", "2010-2011", "2009-2010", "2008-2009", "2007-2008",
-    "2006-2007", "2005-2006", "2004-2005", "2003-2004", "2002-2003",
+    "2006-2007", "2005-2006", "2003-2004", "2002-2003",
     "2001-2002", "2000-2001", "1999-2000", "1998-1999", "1997-1998",
     "1996-1997", "1995-1996", "1994-1995", "1993-1994", "1992-1993"
 )
@@ -220,6 +252,7 @@ fun GamesSelectorPreview() {
         GamesSeasonSelector(
             "R",
             "2021-2022",
+            {},
             {},
             {})
     }
