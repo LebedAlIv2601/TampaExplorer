@@ -4,9 +4,11 @@ import com.lebedaliv2601.tampaexplorer.domain.model.GameModel
 
 sealed class GamesListUiState {
 
-    class Success(val data: List<GameModel>): GamesListUiState()
+    class SuccessRegular(val data: List<GameModel>) : GamesListUiState()
 
-    class Error(val message: String): GamesListUiState()
+    class SuccessPlayOff(val data: Map<String, List<GameModel>>) : GamesListUiState()
+
+    class Error(val message: String) : GamesListUiState()
 
     object Loading : GamesListUiState()
 

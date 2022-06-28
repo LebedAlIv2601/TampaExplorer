@@ -3,6 +3,7 @@ package com.lebedaliv2601.tampaexplorer.presentation.screens.games
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lebedaliv2601.tampaexplorer.domain.model.GameModel
 import com.lebedaliv2601.tampaexplorer.domain.usecase.GetGamesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +40,10 @@ class GamesViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getGamesData().collect {
-                if (it is GamesListUiState.Success || it is GamesListUiState.Error) {
+                if (it is GamesListUiState.SuccessPlayOff
+                    || it is GamesListUiState.SuccessRegular
+                    || it is GamesListUiState.Error
+                ) {
                     isGamesListNeedsToBeUpdated = false
                 }
                 _gamesListState.value = it
@@ -58,16 +62,29 @@ class GamesViewModel @Inject constructor(
                     emit(GamesListUiState.Loading)
 
                     try {
-                        emit(
-                            GamesListUiState.Success(
-                                data = withContext(Dispatchers.IO) {
-                                    getGamesUseCase.execute(
-                                        season = _seasonYear.value.replace("-", ""),
-                                        seasonType = _seasonType.value
-                                    )
-                                }
+
+                        val list = withContext(Dispatchers.IO) {
+                            getGamesUseCase.execute(
+                                season = _seasonYear.value.replace("-", ""),
+                                seasonType = _seasonType.value
                             )
-                        )
+                        }
+
+                        if (_seasonType.value == "P") {
+                            emit(
+                                GamesListUiState.SuccessPlayOff(
+                                    data = list.groupBy { it.gameId.toString().substring(7, 8) }
+                                )
+                            )
+                        } else {
+                            emit(
+                                GamesListUiState.SuccessRegular(
+                                    data = list
+                                )
+                            )
+                        }
+
+
                     } catch (e: Exception) {
                         emit(GamesListUiState.Error(message = e.message ?: "Some error"))
                     }

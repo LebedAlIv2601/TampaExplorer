@@ -2,6 +2,7 @@ package com.lebedaliv2601.tampaexplorer.presentation.screens.games
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
@@ -42,13 +45,14 @@ fun GamesScreen(
     Scaffold(
         modifier = Modifier
             .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        MaterialTheme.colors.primary,
-                        MaterialTheme.colors.primaryVariant,
-                        Color.Black
-                    )
-                )
+                color = Color.White
+//                brush = Brush.verticalGradient(
+//                    colors = listOf(
+//                        MaterialTheme.colors.primary,
+//                        MaterialTheme.colors.primaryVariant,
+//                        Color.Black
+//                    )
+//                )
             ),
         backgroundColor = Color.Transparent,
         topBar = {
@@ -64,8 +68,11 @@ fun GamesScreen(
             is GamesListUiState.Loading -> {
                 GamesProgressBar()
             }
-            is GamesListUiState.Success -> {
-                GamesList(gamesList = (uiState.value as GamesListUiState.Success).data)
+            is GamesListUiState.SuccessRegular -> {
+                GamesListForRegular(gamesList = (uiState.value as GamesListUiState.SuccessRegular).data)
+            }
+            is GamesListUiState.SuccessPlayOff -> {
+                GamesListForPlayOff(gamesList = (uiState.value as GamesListUiState.SuccessPlayOff).data)
             }
             is GamesListUiState.Error -> {
                 Text(text = (uiState.value as GamesListUiState.Error).message)

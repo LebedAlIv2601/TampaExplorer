@@ -34,7 +34,12 @@ fun GamesSeasonSelector(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .height(260.dp),
+            .height(260.dp)
+            .border(
+                color = MaterialTheme.colors.primaryVariant,
+                width = 2.dp,
+                shape = AbsoluteRoundedCornerShape(corner = CornerSize(20.dp))
+            ),
         backgroundColor = Color.White,
         elevation = 4.dp,
         shape = AbsoluteRoundedCornerShape(
@@ -160,7 +165,9 @@ fun BlueButton(
             textAlign = TextAlign.Center,
             color = Color.White,
             fontSize = 20.sp,
-            modifier = Modifier.fillMaxWidth().padding(8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         )
     }
 }

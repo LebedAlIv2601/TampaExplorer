@@ -1,33 +1,36 @@
 package com.lebedaliv2601.tampaexplorer.presentation.screens.games
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.lebedaliv2601.tampaexplorer.domain.model.GameModel
-import com.lebedaliv2601.tampaexplorer.domain.model.TeamModel
-import com.lebedaliv2601.tampaexplorer.domain.model.getTeamIcon
+import com.lebedaliv2601.tampaexplorer.domain.model.*
+import com.lebedaliv2601.tampaexplorer.domain.model.getTeamShortName
 
 
 @Composable
-fun GamesList(gamesList: List<GameModel>){
+fun GamesListForRegular(gamesList: List<GameModel>) {
 
-    LazyColumn{
+    LazyColumn {
 
-        items(gamesList){game ->
+        items(gamesList) { game ->
 
             GamesListItem(game = game)
             Divider(
@@ -37,6 +40,97 @@ fun GamesList(gamesList: List<GameModel>){
         }
 
     }
+
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun GamesListForPlayOff(gamesList: Map<String, List<GameModel>>) {
+
+    LazyColumn {
+
+        gamesList.forEach { (key, games) ->
+
+            stickyHeader {
+
+                GamesListForPlayOffHeader(key, games)
+
+                Divider(
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+
+            }
+
+            items(games) { game ->
+
+
+                GamesListItem(game = game)
+
+                Divider(
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
+
+        }
+    }
+
+}
+
+@Composable
+fun GamesListForPlayOffHeader(key: String, games: List<GameModel>) {
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.primaryVariant)
+    ) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colors.primaryVariant),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "${games.last().awayTeam.getTeamLastName()} " +
+                        "vs ${games.last().homeTeam.getTeamLastName()}",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+            )
+
+            val leadTeamSeriesScore =
+                if (games.first().awayScore > games.first().homeScore) {
+
+                    games.first().awayTeam.getTeamShortName()
+
+                } else {
+                    games.first().homeTeam.getTeamShortName()
+                }
+
+            Text(
+                text = "$key Round, $leadTeamSeriesScore wins 4-${games.size - 4}",
+                color = Color.White,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.ExtraLight,
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+            )
+
+        }
+
+
+    }
+
 
 }
 
@@ -53,8 +147,10 @@ fun GamesListItem(game: GameModel) {
         backgroundColor = Color.Transparent,
     ) {
 
-        Row(horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,8 +166,6 @@ fun GamesListItem(game: GameModel) {
                         contentDescription = "Away Team Icon",
                         modifier = Modifier
                             .size(60.dp)
-                            .clip(shape = CircleShape)
-                            .background(shape = CircleShape, color = Color.White)
                             .padding(5.dp)
                     )
                 }
@@ -79,7 +173,7 @@ fun GamesListItem(game: GameModel) {
                 Text(
                     text = game.awayTeam.name,
                     textAlign = TextAlign.Center,
-                    color = Color.White,
+                    color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(2f),
@@ -87,16 +181,18 @@ fun GamesListItem(game: GameModel) {
                 )
             }
 
-            Column (horizontalAlignment = Alignment.CenterHorizontally,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .weight(1f)
-                    .fillMaxHeight()){
+                    .fillMaxHeight()
+            ) {
 
                 Text(
                     text = "${game.awayScore} - ${game.homeScore}",
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 40.sp,
                     modifier = Modifier.weight(2f),
                     textAlign = TextAlign.Center
@@ -104,7 +200,7 @@ fun GamesListItem(game: GameModel) {
 
                 Text(
                     text = game.gameDate,
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 16.sp,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
@@ -112,7 +208,7 @@ fun GamesListItem(game: GameModel) {
 
                 Text(
                     text = game.venue,
-                    color = Color.White,
+                    color = Color.Black,
                     fontSize = 10.sp,
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
@@ -127,24 +223,22 @@ fun GamesListItem(game: GameModel) {
                     .fillMaxHeight()
             ) {
 
-               Box(modifier = Modifier.weight(3f)) {
-                   Image(
-                       painter = rememberImagePainter(
-                           data = game.homeTeam.getTeamIcon()
-                       ),
-                       contentDescription = "Home Team Icon",
-                       modifier = Modifier
-                           .size(60.dp)
-                           .clip(shape = CircleShape)
-                           .background(shape = CircleShape, color = Color.White)
-                           .padding(5.dp)
-                   )
-               }
+                Box(modifier = Modifier.weight(3f)) {
+                    Image(
+                        painter = rememberImagePainter(
+                            data = game.homeTeam.getTeamIcon()
+                        ),
+                        contentDescription = "Home Team Icon",
+                        modifier = Modifier
+                            .size(60.dp)
+                            .padding(5.dp)
+                    )
+                }
 
                 Text(
                     text = game.homeTeam.name,
                     textAlign = TextAlign.Center,
-                    color = Color.White,
+                    color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(2f),

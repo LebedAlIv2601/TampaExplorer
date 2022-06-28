@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +17,9 @@ fun GamesProgressBar(){
 
     Box(modifier = Modifier.fillMaxSize(),
     contentAlignment = Alignment.Center){
-        CircularProgressIndicator(color = Color.White, strokeWidth = 5.dp)
+        CircularProgressIndicator(
+            color = MaterialTheme.colors.primaryVariant,
+            strokeWidth = 5.dp)
     }
 
 }
