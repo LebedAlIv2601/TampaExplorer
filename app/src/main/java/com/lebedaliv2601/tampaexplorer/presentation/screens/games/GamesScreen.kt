@@ -46,13 +46,6 @@ fun GamesScreen(
         modifier = Modifier
             .background(
                 color = Color.White
-//                brush = Brush.verticalGradient(
-//                    colors = listOf(
-//                        MaterialTheme.colors.primary,
-//                        MaterialTheme.colors.primaryVariant,
-//                        Color.Black
-//                    )
-//                )
             ),
         backgroundColor = Color.Transparent,
         topBar = {

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lebedaliv2601.tampaexplorer.domain.model.GameModel
 import com.lebedaliv2601.tampaexplorer.domain.usecase.GetGamesUseCase
+import com.lebedaliv2601.tampaexplorer.domain.usecase.GetSeasonFromPrefUseCase
+import com.lebedaliv2601.tampaexplorer.domain.usecase.SaveSeasonToPrefUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GamesViewModel @Inject constructor(
-    private val getGamesUseCase: GetGamesUseCase
+    private val getGamesUseCase: GetGamesUseCase,
+    private val getSeasonFromPrefUseCase: GetSeasonFromPrefUseCase,
+    private val saveSeasonToPrefUseCase: SaveSeasonToPrefUseCase
 ) : ViewModel() {
 
     private val _gamesListState =
@@ -39,12 +43,24 @@ class GamesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+
+            _seasonType.value =
+                withContext(Dispatchers.Default) { getSeasonFromPrefUseCase.invoke().seasonType }
+            _seasonYear.value =
+                withContext(Dispatchers.Default) { getSeasonFromPrefUseCase.invoke().seasonYear }
+
             getGamesData().collect {
                 if (it is GamesListUiState.SuccessPlayOff
                     || it is GamesListUiState.SuccessRegular
                     || it is GamesListUiState.Error
                 ) {
                     isGamesListNeedsToBeUpdated = false
+                    withContext(Dispatchers.Default) {
+                        saveSeasonToPrefUseCase.invoke(
+                            seasonType = _seasonType.value,
+                            seasonYear = _seasonYear.value
+                        )
+                    }
                 }
                 _gamesListState.value = it
             }
@@ -125,30 +141,4 @@ class GamesViewModel @Inject constructor(
         }
         _seasonYear.value = seasonYear
     }
-
-//    fun getGames(season: String, seasonType: String) {
-//        viewModelScope.launch {
-//            _gamesListState.value = GamesListUiState.Loading
-//            _gamesListState.value = getGamesUseCaseExecuting(season, seasonType)
-//        }
-//    }
-
-//    private suspend fun getGamesUseCaseExecuting(
-//        season: String,
-//        seasonType: String
-//    ): GamesListUiState {
-//        return withContext(Dispatchers.IO) {
-//            try {
-//                GamesListUiState.Success(
-//                    data = getGamesUseCase.execute(
-//                        season = season,
-//                        seasonType = seasonType
-//                    )
-//                )
-//            } catch (e: Exception) {
-//                GamesListUiState.Error(message = e.message ?: "Some error")
-//            }
-//        }
-//    }
-
 }

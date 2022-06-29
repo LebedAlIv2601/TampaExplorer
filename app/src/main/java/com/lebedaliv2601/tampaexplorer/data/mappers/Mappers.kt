@@ -2,8 +2,10 @@ package com.lebedaliv2601.tampaexplorer.data.mappers
 
 import com.lebedaliv2601.tampaexplorer.data.model.DateGamesData
 import com.lebedaliv2601.tampaexplorer.data.model.GamesModelData
+import com.lebedaliv2601.tampaexplorer.data.model.SeasonModelData
 import com.lebedaliv2601.tampaexplorer.data.model.TeamResultModelData
 import com.lebedaliv2601.tampaexplorer.domain.model.GameModel
+import com.lebedaliv2601.tampaexplorer.domain.model.SeasonModel
 import com.lebedaliv2601.tampaexplorer.domain.model.TeamModel
 
 fun DateGamesData.toDomain(): GameModel{
@@ -36,4 +38,18 @@ fun getDate(gameDate: String): String{
 
 fun GamesModelData.toGameModelList(): List<GameModel>{
     return dates.map { it.toDomain() }
+}
+
+fun SeasonModel.toData(): SeasonModelData{
+    return SeasonModelData(
+        seasonType = seasonType,
+        seasonYear = seasonYear
+    )
+}
+
+fun SeasonModelData.toDomain(): SeasonModel{
+    return SeasonModel(
+        seasonType = seasonType,
+        seasonYear = seasonYear
+    )
 }
