@@ -37,7 +37,7 @@ fun GamesSeasonSelector(
             .height(260.dp)
             .border(
                 color = MaterialTheme.colors.primaryVariant,
-                width = 2.dp,
+                width = 1.dp,
                 shape = AbsoluteRoundedCornerShape(corner = CornerSize(20.dp))
             ),
         backgroundColor = Color.White,

@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -16,13 +15,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.lebedaliv2601.tampaexplorer.presentation.navigation.Screen
+import com.lebedaliv2601.tampaexplorer.presentation.screens.utils.GamesProgressBar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -45,7 +45,7 @@ fun GamesScreen(
     Scaffold(
         modifier = Modifier
             .background(
-                color = Color.White
+                color = MaterialTheme.colors.background
             ),
         backgroundColor = Color.Transparent,
         topBar = {
@@ -62,10 +62,21 @@ fun GamesScreen(
                 GamesProgressBar()
             }
             is GamesListUiState.SuccessRegular -> {
-                GamesListForRegular(gamesList = (uiState.value as GamesListUiState.SuccessRegular).data)
+                GamesListForRegular(
+                    gamesList = (uiState.value as GamesListUiState.SuccessRegular).data
+                ) {gameScore, awayTeamName, homeTeamName, gameId ->
+                    navController.navigate(
+                        "${Screen.GameInfo.route}/$gameScore/$awayTeamName/$homeTeamName/$gameId"
+                    )
+                }
             }
             is GamesListUiState.SuccessPlayOff -> {
                 GamesListForPlayOff(gamesList = (uiState.value as GamesListUiState.SuccessPlayOff).data)
+                {gameScore, awayTeamName, homeTeamName, gameId ->
+                    navController.navigate(
+                        "${Screen.GameInfo.route}/$gameScore/$awayTeamName/$homeTeamName/$gameId"
+                    )
+                }
             }
             is GamesListUiState.Error -> {
                 Text(text = (uiState.value as GamesListUiState.Error).message)

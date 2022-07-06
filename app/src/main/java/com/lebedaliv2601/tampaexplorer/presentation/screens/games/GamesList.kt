@@ -3,6 +3,7 @@ package com.lebedaliv2601.tampaexplorer.presentation.screens.games
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,15 +27,18 @@ import com.lebedaliv2601.tampaexplorer.domain.model.getTeamShortName
 
 
 @Composable
-fun GamesListForRegular(gamesList: List<GameModel>) {
+fun GamesListForRegular(
+    gamesList: List<GameModel>,
+    onItemClick: (String, String, String, String) -> Unit
+) {
 
     LazyColumn {
 
         items(gamesList) { game ->
 
-            GamesListItem(game = game)
+            GamesListItem(game = game, onItemClick)
             Divider(
-                color = Color.Black,
+                color = MaterialTheme.colors.onSurface,
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -45,7 +49,10 @@ fun GamesListForRegular(gamesList: List<GameModel>) {
 
 @ExperimentalFoundationApi
 @Composable
-fun GamesListForPlayOff(gamesList: Map<String, List<GameModel>>) {
+fun GamesListForPlayOff(
+    gamesList: Map<String, List<GameModel>>,
+    onItemClick: (String, String, String, String) -> Unit
+) {
 
     LazyColumn {
 
@@ -56,7 +63,7 @@ fun GamesListForPlayOff(gamesList: Map<String, List<GameModel>>) {
                 GamesListForPlayOffHeader(key, games)
 
                 Divider(
-                    color = Color.Black,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -66,10 +73,10 @@ fun GamesListForPlayOff(gamesList: Map<String, List<GameModel>>) {
             items(games) { game ->
 
 
-                GamesListItem(game = game)
+                GamesListItem(game = game, onItemClick)
 
                 Divider(
-                    color = Color.Black,
+                    color = MaterialTheme.colors.onSurface,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
@@ -136,10 +143,18 @@ fun GamesListForPlayOffHeader(key: String, games: List<GameModel>) {
 
 
 @Composable
-fun GamesListItem(game: GameModel) {
+fun GamesListItem(game: GameModel, onItemClick: (String, String, String, String) -> Unit) {
 
     Card(
         modifier = Modifier
+            .clickable {
+                onItemClick(
+                    "${game.awayScore} - ${game.homeScore}",
+                    game.awayTeam.name,
+                    game.homeTeam.name,
+                    game.gameId.toString()
+                )
+            }
             .padding(8.dp)
             .fillMaxWidth()
             .height(110.dp),
@@ -264,5 +279,5 @@ fun GamePreview() {
             venue = "Xcel Energy Arena",
             gameDate = "09.01.2018"
         )
-    )
+    ) { _, _, _, _ -> }
 }

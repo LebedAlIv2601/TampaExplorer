@@ -5,6 +5,10 @@ data class TeamModel(
     val name: String
 )
 
+fun getTeamIconByName(name: String): String{
+    return TeamModel(0, name).getTeamIcon()
+}
+
 fun TeamModel.getTeamIcon(): String {
     return when (name) {
         "Arizona Coyotes" -> "https://content.sportslogos.net/logos/1/5263/full/arizona_coyotes_logo_primary_2022_sportslogosnet-8273.png"
